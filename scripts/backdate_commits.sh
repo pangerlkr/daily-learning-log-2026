@@ -95,30 +95,35 @@ while [ $CURRENT_SECONDS -le $END_SECONDS ]; do
 *Generated automatically as part of daily learning log initiative*
 EOF
     
-    # Add and commit with the backdated timestamp
-    git add "$LOG_FILE"
-    
-    # Set both author and committer dates to the target date at noon
-    GIT_AUTHOR_DATE="$CURRENT_DATE 12:00:00" \
-    GIT_COMMITTER_DATE="$CURRENT_DATE 12:00:00" \
-    git commit -m "Daily log: $CURRENT_DATE - $DAY_NAME (Day $COUNTER/$TOTAL_DAYS)"
+    # Random number of commits per day (1 to 460)
+        NUM_COMMITS=$((RANDOM % 460 + 1))
+        
+            # Create multiple commits for this day
+                for ((COMMIT_NUM=1; COMMIT_NUM<=NUM_COMMITS; COMMIT_NUM++)); do
+                        # Randomize the hour and minute for each commit
+                                HOUR=$((RANDOM % 24))
+                                        MINUTE=$((RANDOM % 60))
+                                                SECOND=$((RANDOM % 60))
+                                                        TIME_STR=$(printf "%02d:%02d:%02d" $HOUR $MINUTE $SECOND)
+                                                        
+                                                                # Add and commit with the backdated timestamp
+                                                                        git add "$LOG_FILE"
+                                                                        
+                                                                                # Set both author and committer dates to the target date with random time
+                                                                                        GIT_AUTHOR_DATE="$CURRENT_DATE $TIME_STR" \
+                                                                                                GIT_COMMITTER_DATE="$CURRENT_DATE $TIME_STR" \
+                                                                                                        git commit -m "Daily log: $CURRENT_DATE - $DAY_NAME (Commit $COMMIT_NUM/$NUM_COMMITS)"
+                                                                                                            done
     
     # Progress indicator
-    if [ $((COUNTER % 10)) -eq 0 ]; then
-        PERCENT=$((COUNTER * 100 / TOTAL_DAYS))
-        echo "Progress: $COUNTER/$TOTAL_DAYS days ($PERCENT%) - Current date: $CURRENT_DATE"
-    fi
+        if [ $((COUNTER % 10)) -eq 0 ]; then
+                PERCENT=$((COUNTER * 100 / TOTAL_DAYS))
+                        echo "Progress: $COUNTER/$TOTAL_DAYS days ($PERCENT%) - Current date: $CURRENT_DATE - $NUM_COMMITS commits today"
+                            fi
     
     # Move to next day
     CURRENT_SECONDS=$((CURRENT_SECONDS + 86400))
 done
 
-echo ""
-echo "✅ Completed! Created $COUNTER commits."
-echo ""
-echo "Next steps:"
-echo "1. Review the commits: git log --oneline"
-echo "2. Push to GitHub: git push origin main"
-echo "3. Wait a few minutes for GitHub to update your contribution graph"
 echo ""
 echo "⚠️  Remember: Genuine contributions are always better than backdated ones!"
