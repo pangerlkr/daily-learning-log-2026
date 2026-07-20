@@ -16,8 +16,8 @@ Daily learning log and contribution tracker - Automated daily commits with backd
 
 ## 🎯 Features
 
-- **Backdating Capability**: Fill contribution history for a specified date range
-- **Daily Automation**: Automated daily commit workflow for ongoing learning logs
+- **Backdating Capability**: Fill contribution history with custom date range (From-To) or use default dates
+- - **Dy Automation**: Automated daily commit workflow for ongoing learning logs
 - **Structured Learning Logs**: Organized by date with consistent formatting
 - **Topic Tracking**: Document what you learned each day
 - **GitHub Actions Integration**: Automated commits without manual intervention
@@ -63,8 +63,19 @@ chmod +x scripts/backdate_commits.sh
 ./scripts/backdate_commits.sh
 ```
 
+**Custom Date Range (New!):**
+
+You can now specify a custom date range instead of using the default dates:
+```bash
+# Use custom dates (Format: YYYY-MM-DD)
+./scripts/backdate_commits.sh 2025-01-01 2025-12-31
+
+# Or run without arguments to use default range (2025-06-01 to 2026-07-20)
+./scripts/backdate_commits.sh
+```
+
 The script will:
-1. Create daily learning log entries from 2025-06-01 to 2026-07-20
+1. Create daily learning log entries for your specified date range (or default range if no dates provided)ed)
 2. Generate commits with backdated timestamps
 3. Organize logs by year and month
 4. Push all commits to GitHub
