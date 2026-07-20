@@ -105,7 +105,7 @@ echo "  End Date:   ${CYAN}$END_DATE${NC}"
 echo ""
 
 print_info "This will create commits for every day in the specified range."
-print_info "Each day will have 1-460 random commits with randomized timestamps."
+print_info "Each day will have 1-364 random commits with randomized timestamps."
 echo ""
 
 print_warning "IMPORTANT: This is for educational/personal purposes only."
@@ -163,8 +163,8 @@ while [ $CURRENT_SECONDS -le $END_SECONDS ]; do
         CURRENT_DATE=$(date -d "@$CURRENT_SECONDS" "+%Y-%m-%d")
     fi
     
-    # Random number of commits per day (1-460)
-    NUM_COMMITS=$((RANDOM % 460 + 1))
+    # Random number of commits per day (1-364)
+    NUM_COMMITS=$((RANDOM % 364 + 1))
     TOTAL_COMMITS=$((TOTAL_COMMITS + NUM_COMMITS))
     
     # Create log file for this day
