@@ -37,6 +37,7 @@ daily-learning-log-2026/
 │       └── ...
 ├── scripts/
 │   └── backdate_commits.sh   # Backdating script
+│   └── remove_backdated_commits.sh   # Script to remove backdated commits
 ├── .github/
 │   └── workflows/
 │       └── daily-automation.yml  # Daily commit automation
@@ -101,6 +102,42 @@ The script will:
 - Adds template for topics learned
 - Commits and pushes automatically
 - Maintains consistent contribution activity
+
+
+### Option 3: Removing Backdated Commits
+
+If you need to remove the backdated commits from your Git history:
+
+**Step 1:** Make the removal script executable
+
+```bash
+chmod +x scripts/remove_backdated_commits.sh
+```
+
+**Step 2:** Run the removal script
+
+```bash
+# Remove all backdated commits
+./scripts/remove_backdated_commits.sh
+
+# OR remove commits from a specific date range
+./scripts/remove_backdated_commits.sh 2025-01-01 2025-12-31
+```
+
+The script will:
+1. Create a backup branch automatically
+2. Ask for confirmation before proceeding
+3. Remove all `daily-logs/` files and associated commits
+4. Clean up Git history
+5. Provide instructions for force pushing
+
+**Step 3:** Force push to update remote repository
+
+```bash
+git push origin main --force
+```
+
+**⚠️ Warning:** This rewrites Git history. Make sure to review the backup branch before force pushing.
 
 ## 📝 Daily Log Format
 
