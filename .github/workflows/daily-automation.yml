@@ -1,0 +1,90 @@
+name: Daily Learning Log Automation
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  create-daily-log:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Create daily log entry
+        run: |
+          # Get current date
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          YEAR=$(date +%Y)
+          MONTH=$(date +%m)
+          
+          # Create directory structure
+          mkdir -p "daily-logs/$YEAR/$MONTH"
+          
+          # Create log file
+          LOG_FILE="daily-logs/$YEAR/$MONTH/$CURRENT_DATE.md"
+          
+          # Check if log already exists
+          if [ -f "$LOG_FILE" ]; then
+            echo "Log for $CURRENT_DATE already exists"
+            exit 0
+          fi
+          
+          # Create log entry with template
+          cat > "$LOG_FILE" << 'EOF'
+          # Learning Log - CURRENT_DATE_PLACEHOLDER
+          
+          ## Topics Covered
+          - Topic 1: [Add description]
+          - Topic 2: [Add description]
+          - Topic 3: [Add description]
+          
+          ## Resources
+          - [Resource Name](URL)
+          
+          ## Notes
+          [Add your notes and reflections here]
+          
+          ## Progress
+          - [Add milestone or achievement]
+          
+          ## Next Steps
+          - [Plan for tomorrow]
+          EOF
+          
+          # Replace placeholder with actual date
+          sed -i "s/CURRENT_DATE_PLACEHOLDER/$CURRENT_DATE/g" "$LOG_FILE"
+          
+          # Display created file
+          echo "Created: $LOG_FILE"
+          cat "$LOG_FILE"
+      
+      - name: Commit and push changes
+        run: |
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          
+          # Add the new file
+          git add .
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          # Commit and push
+          git commit -m "docs: Add daily learning log for $CURRENT_DATE"
+          git push
+          
+          echo "Successfully created and pushed daily log for $CURRENT_DATE"
